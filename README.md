@@ -17,10 +17,15 @@
 
 
 <h3>USERS</h3>
-(GET) /users/:
+(GET) /user/:  
 returns all users
 
-(POST) /users/<string:username>/zoom_login:
+
+(GET) /user/<string:username>/get_spotify_info:
+  updates the user specified to have updated genres and artists from their most recently played; prompts spotify login.
+
+
+(POST) /user/<string:username>/zoom_login:
 - needs the auth_code from the redirect url in a json parameter as a value for the key "auth_code".
 - returns the full user information, with the zoom token, for the provided user id
 
