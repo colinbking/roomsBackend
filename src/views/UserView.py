@@ -5,6 +5,8 @@ from ..models.UserModel import UserModel, UserSchema
 from ..shared.Authentication import Auth
 import os
 import requests
+import random
+import datetime
 
 
 user_api = Blueprint('user_api', __name__)
@@ -20,21 +22,46 @@ def get_all():
   print(ser_users)
   return custom_response(ser_users, 200)
 
-@user_api.route('/<int:user_id>/zoom_login', methods=['POST'])
-def store_zoom_token(user_id):
+
+@user_api.route('/signup', methods=['POST'])
+def create():
+  """
+  Create User Function
+  """
+  req_data = request.get_json()
+#   print(req_data)
+  data, error = user_schema.load(req_data)
+
+  if error:
+    return custom_response(error, 400)
+  
+  # check if user already exist in the db
+  user_in_db = UserModel.get_user_by_email(data.get('email'))
+  if user_in_db:
+    message = {'error': 'User already exist, please supply another email address'}
+    return custom_response(message, 400)
+
+  user = UserModel(data)
+  user.save()
+  print(data, user)
+  ser_data = user_schema.dump(user)
+  return(custom_response(ser_data, 200))
+
+@user_api.route('/<string:username>/zoom_login', methods=['POST'])
+def store_zoom_token(username):
   """
   takes the authcode, fetches the proper bearer token, and stores the token
   in the user table.
   """
-
-  user = UserModel.get_one_user(user_id)
+  user = UserModel.get_user_by_name(username)
   to_update = user_schema.dump(user)
   auth_code = request.get_json()['auth_code']
   hdrs = {"Authorization": "Basic " + os.getenv('ENCODED_ID_SECRET')}
   resp = requests.post('https://zoom.us/oauth/token?grant_type=authorization_code&code='+auth_code+'&redirect_uri=https://www.roomy-pennapps.space/home', headers=hdrs)
   b_token = resp.json().get("access_token")
-  print(resp.content, b_token)
-  user.update({"zoom_token": b_token})
+  if resp.status_code != 200:
+      return custom_response("failed to get bearer from zoom", 500)
+  user.update({"zoom_token": b_token, "last_login": datetime.datetime.utcnow(), "online":True})
   new_u = user_schema.dump(user)
   return custom_response(new_u, 200)
 

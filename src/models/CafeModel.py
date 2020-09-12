@@ -7,13 +7,13 @@ from sqlalchemy import DateTime
 # from sqlalchemy import ARRAY
 from sqlalchemy.dialects.postgresql import ARRAY
 
-class GymModel(db.Model):
+class CafeModel(db.Model):
   """
-  gym Room Model
+  Cafe Room Model
   """
 
   # table name
-  __tablename__ = 'gym'
+  __tablename__ = 'cafe'
 
   id = db.Column(db.Integer, primary_key=True)
   lastplayed = db.Column(db.String(128), nullable=False)
@@ -23,7 +23,7 @@ class GymModel(db.Model):
   active = db.Column(ARRAY(db.String(128)), nullable=False)
   zoom_mtg = db.Column(db.String(128))
   note = db.Column(db.String(128))
-  
+
   # class constructor
   def __init__(self, data):
     """
@@ -50,22 +50,22 @@ class GymModel(db.Model):
     db.session.commit()
 
   @staticmethod
-  def get_all_gyms():
-    return GymModel.query.all()
+  def get_all_cafes():
+    return CafeModel.query.all()
 
   @staticmethod
-  def get_one_gym(id):
-    return GymModel.query.get(id)
+  def get_one_cafe(id):
+    return CafeModel.query.get(id)
 
   @staticmethod
-  def join_gym(id):
-    return GymModel.query.get(id)
+  def join_cafe(id):
+    return CafeModel.query.get(id)
 
 
   def __repr(self):
     return '<id {}>'.format(self.id)
 
-class GymSchema(Schema):
+class CafeSchema(Schema):
   id = fields.Int(dump_only=True)
   lastplayed = fields.Str()
   focus = fields.Str()
@@ -74,6 +74,7 @@ class GymSchema(Schema):
   video_started = fields.DateTime()
   zoom_mtg = fields.Str()
   note = fields.Str()
+
 
 #   blogposts = fields.Nested(BlogpostSchema, many=True)
 

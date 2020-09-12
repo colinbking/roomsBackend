@@ -34,7 +34,6 @@ class UserModel(db.Model):
     """
     self.name = data.get('name')
     self.email = data.get('email')
-    self.password = self.__generate_hash(data.get('password'))
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 
@@ -62,6 +61,10 @@ class UserModel(db.Model):
     return UserModel.query.get(id)
   
   @staticmethod
+  def get_user_by_name(value):
+    return UserModel.query.filter_by(username=value).first()
+
+  @staticmethod
   def get_user_by_email(value):
     return UserModel.query.filter_by(email=value).first()
 
@@ -75,8 +78,8 @@ class UserModel(db.Model):
     return '<id {}>'.format(self.id)
 
 class UserSchema(Schema):
-  id = fields.Int(dump_only=True)
-  user_id = fields.Str(required= True)
+  id = fields.Int()
+  user_id = fields.Str()
   username = fields.Str(required=True)
   email = fields.Email(required=True)
   artists = fields.List(fields.Str)
@@ -87,7 +90,7 @@ class UserSchema(Schema):
   last_seen_in = fields.Str()
   last_login = fields.Str()
   online = fields.Bool()
-  created_at = fields.DateTime(dump_only=True)
+  created_at = fields.DateTime(default=datetime.datetime.utcnow())
 
 #   blogposts = fields.Nested(BlogpostSchema, many=True)
 
