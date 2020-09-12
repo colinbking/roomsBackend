@@ -55,6 +55,7 @@ def signal_leaving_member(br_id):
     return custom_response(new_mems, 200)
 
 
+
 def custom_response(res, status_code):
   """
   Custom Response Function

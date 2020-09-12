@@ -38,6 +38,148 @@ def store_zoom_token(user_id):
   new_u = user_schema.dump(user)
   return custom_response(new_u, 200)
 
+
+
+
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
+import spotipy.util as util
+# import pprint
+import requests
+
+# pp = pprint.PrettyPrinter()
+
+
+# def add_song_to_playlist():
+
+
+@user_api.route('/get_spotify_info', methods=['GET'])
+def get_new_spotify_playlist():
+  """
+  
+  """
+
+  # delete .cache
+  import os
+  APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+  if os.path.isfile('../../.cache'):
+    os.remove(os.path.join(APP_ROOT, '../../.cache'))
+
+  # Start Oauth2
+
+  # auth_manager = SpotifyClientCredentials()
+  # sp = spotipy.Spotify(auth_manager=auth_manager)
+
+
+  # export SPOTIPY_CLIENT_ID='eae14429b373461aadc72104110154f9'
+  # export SPOTIPY_CLIENT_SECRET='ada7bc6d1a1d4eada84cf382ae26c4f0'
+
+  # username = '31a4izbs5mkyksxuhdzetwyoivfm'
+  scope = "user-read-recently-played playlist-modify-public user-library-modify playlist-read-collaborative playlist-modify-private"
+  # redirect_uri = "https://www.roomy-pennapps.space/"
+  redirect_uri = "https://testflask-289216.uc.r.appspot.com/"
+  # token = util.prompt_for_user_token(username, scope, redirect_uri='https://www.roomy-pennapps.space/home/')
+  token = True
+  if token:
+    # print("Got token for ", username)
+    sp_auth = SpotifyOAuth(client_id="eae14429b373461aadc72104110154f9",
+                                                  client_secret="ada7bc6d1a1d4eada84cf382ae26c4f0",
+                                                  redirect_uri=redirect_uri,
+                                                  scope=scope)
+    sp = spotipy.Spotify(auth_manager=sp_auth)
+    # url = sp_auth.get_authorize_url()
+    # print(url)
+
+  else:
+    # print("Can't get token for ", username)
+    print("Error getting token")
+
+  
+
+  # # Get recently played song from the user, and get the artist name and artist id
+
+  results = sp.current_user_recently_played()
+  # print(results)
+  print(sp.current_user())
+
+  for idx, item in enumerate(results['items']):
+      track = item['track']
+      artist_id = track['artists'][0]['id']
+      artist_name = track['artists'][0]['name']
+      # pp.pprint(track)
+      print(artist_name, artist_id)
+      break
+
+
+  
+
+  # now get artist info and extract genre
+
+
+  resp = requests.get('https://api.spotify.com/v1/artists/' + artist_id, headers = {'Authorization': '{} {}'.format(sp.auth_manager.get_cached_token()['token_type'], sp.auth_manager.get_cached_token()['access_token'])})
+  if resp.status_code != 200:
+      print("ERROR!")
+
+  genres = resp.json()['genres']
+  # print(genres)
+
+
+
+
+
+
+  # Get random new songs from seeds (genre and artist)
+
+  resp = requests.get('https://api.spotify.com/v1/recommendations/?market={}&seed_artists={}&seed_genres={}&min_energy={}&min_popularity={}'.format(
+      'US', artist_id, ','.join(genres[:5]), 0.4, 50
+  ),  headers = {'Authorization': '{} {}'.format(sp.auth_manager.get_cached_token()['token_type'], sp.auth_manager.get_cached_token()['access_token'])})
+  if resp.status_code != 200:
+      print("ERROR2")
+
+  # pp.pprint(resp.json())
+  # pp.pprint(resp.json()['tracks'])
+  # pp.pprint(resp.json()['tracks'][0])
+  # print(len(resp.json()['tracks']))
+
+
+  uri = resp.json()['tracks'][0]['uri']
+  print(resp.json()['tracks'][0]['name'], resp.json()['tracks'][0]['artists'][0]['name'])
+
+
+
+
+
+  # ADD NEW TRACK TO PLAYLIST
+
+
+  sp_auth = SpotifyOAuth(client_id="eae14429b373461aadc72104110154f9",
+                                                client_secret="ada7bc6d1a1d4eada84cf382ae26c4f0",
+                                                redirect_uri=redirect_uri,
+                                                scope=scope,
+                                                cache_path='.shjangcache')
+  sp = spotipy.Spotify(auth_manager=sp_auth)
+
+
+  playlist_id = '5sHebLj2M8wPPc1rfLKtX9'
+  # "https://open.spotify.com/embed/playlist/5sHebLj2M8wPPc1rfLKtX9?si=ulRKMYT9R8C7Scmcny3fJQ"
+
+
+  sp.playlist_add_items(playlist_id, [uri])
+
+
+
+
+
+  return custom_response({"result": "good"}, 200)
+
+
+# @user_api.route('/get_spotify_info/callback/', methods=['GET'])
+# def callback_route():
+#   return custom_response({"result": "nice"}, 200)
+
+
+
+
 # @user_api.route('/', methods=['POST'])
 # def create():
 #   """
