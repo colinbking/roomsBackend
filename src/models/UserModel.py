@@ -35,8 +35,10 @@ class UserModel(db.Model):
     self.username = username
     self.email = email
     self.id = id
+    self.user_id = email
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
+    self.online = True
 
   def save(self):
     db.session.add(self)

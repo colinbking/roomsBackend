@@ -134,7 +134,7 @@ def start_zoom_meeting(id):
     }
     print("here\n",token)
     print(json.dumps(body))
-    resp = requests.post('https://api.zoom.us/v2/users/'+usr.user_id+'/meetings', json = body, headers = {"Content-Type":"application/json","Authorization" : "Bearer "+ token, "Connection":"keep-alive"})
+    resp = requests.post('https://api.zoom.us/v2/users/'+usr.email+'/meetings', json = body, headers = {"Content-Type":"application/json","Authorization" : "Bearer "+ token, "Connection":"keep-alive"})
     return resp.json()
     
 
