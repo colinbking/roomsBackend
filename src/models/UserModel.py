@@ -1,5 +1,7 @@
 # src/models/UserModel.py
 from marshmallow import fields, Schema
+from sqlalchemy.sql import operators
+from sqlalchemy.dialects.postgresql import ARRAY
 import datetime
 from . import db, bcrypt
 
@@ -12,15 +14,17 @@ class UserModel(db.Model):
   __tablename__ = 'users'
 
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(128), nullable=False)
+  username = db.Column(db.String(128), nullable=False)
   email = db.Column(db.String(128), unique=True, nullable=False)
-  password = db.Column(db.String(128), nullable=False)
+  artists = db.Column(ARRAY(db.String(128)), nullable=False)
+  genres = db.Column(ARRAY(db.String(128)), nullable=False)
+  songs = db.Column(ARRAY(db.String(128)), nullable=False)
+  zoom_token = db.Column(db.String(128))
   created_at = db.Column(db.DateTime)
-  favoriteroom = db.Column(db.DateTime)
   status = db.Column(db.String(128))
   online = db.Column(db.Boolean(128))
-  lastseenin = db.Column(db.String(128))
-  lastlogintime = db.Column(db.DateTime)
+  last_seen_in = db.Column(db.String(128))
+  last_login = db.Column(db.DateTime)
 
   # class constructor
   def __init__(self, data):
@@ -71,16 +75,17 @@ class UserModel(db.Model):
 
 class UserSchema(Schema):
   id = fields.Int(dump_only=True)
-  name = fields.Str(required=True)
+  username = fields.Str(required=True)
   email = fields.Email(required=True)
-  favoriteroom = fields.Str()
+  artists = fields.List(fields.Str)
+  genres = fields.List(fields.Str)
+  songs = fields.List(fields.Str)
+  zoom_token = fields.Str()
   status = fields.Str()
-  lastseenin = fields.Str()
-  lastlogintime = fields.Str()
+  last_seen_in = fields.Str()
+  last_login = fields.Str()
   online = fields.Bool()
-  password = fields.Str(required=True, load_only=True)
   created_at = fields.DateTime(dump_only=True)
-  modified_at = fields.DateTime(dump_only=True)
 
 #   blogposts = fields.Nested(BlogpostSchema, many=True)
 

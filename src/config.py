@@ -13,6 +13,8 @@ class Development(object):
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    ZOOM_SECRET = os.getenv('ENCODED_ID_SECRET')
+
     # SSE_REDIS_URL = 
 
 
@@ -24,6 +26,7 @@ class Production(object):
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    ZOOM_SECRET = os.getenv('ENCODED_ID_SECRET')
     # SSE_REDIS_URL = 
 
 

@@ -35,10 +35,32 @@ def create_app(env_name):
 
   @app.route('/', methods=['GET'])
   def index():
+    
+    return """
+    <HTML>
+
+<HEAD>
+
+<TITLE>Spotify Web Embed Player</TITLE>
+
+</HEAD>
+
+<BODY BGCOLOR="FFFFFF">
+
+<HR>
+
+<iframe src="https://open.spotify.com/embed/playlist/5sHebLj2M8wPPc1rfLKtX9?si=ulRKMYT9R8C7Scmcny3fJQ" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+<iframe src="https://www.youtube.com/embed/H7v_p76EjGo" width="400" height="620" frameborder="0"></iframe>
+<iframe src="https://w2g.tv/rooms/lel0yxtaj1q6fu6fn3?app=1" width="400" height="620" frameborder="0"></iframe>
+
+
+
+<HR>
+
+</BODY>
+
+</HTML>
     """
-    example endpoint
-    """
-    return 'ROOMS'
 
   return app
 
