@@ -76,9 +76,18 @@ import requests
 
 # pp = pprint.PrettyPrinter()
 
+@user_api.route('/callback/<string:authtoken>')
+def extractAuthToken(authtoken):
+  # authtoken = authtoken.split("?code=")[0]
+  authtoken = "https://papps2020.uc.r.appspot.com/user/callback/" + authtoken
 
-# def add_song_to_playlist():
+  print(authtoken)
+  import sys
+  from io import StringIO
 
+  sys.stdin = StringIO(authtoken)
+
+  return custom_response({"result":"success"}, 200)
 
 @user_api.route('/<string:username>/get_spotify_info', methods=['GET'])
 def get_new_spotify_playlist(username):
@@ -107,20 +116,25 @@ def get_new_spotify_playlist(username):
 
   # username = '31a4izbs5mkyksxuhdzetwyoivfm'
   scope = "user-read-recently-played playlist-modify-public user-library-modify playlist-read-collaborative playlist-modify-private"
-  # redirect_uri = "https://www.roomy-pennapps.space/"
+  # redirect_uri = "https://www.roomy-pennapps.space/home/"
   # redirect_uri = "http://localhost:8080/"
-  redirect_uri = "https://papps2020.uc.r.appspot.com/"
+  redirect_uri = "https://papps2020.uc.r.appspot.com/user/callback/"
+  # redirect_uri = "http://example.com/callback/"
 
-
-  # token = util.prompt_for_user_token(username, scope, redirect_uri='https://www.roomy-pennapps.space/home/')
+  # username = 'shjang956'
+  # token = util.prompt_for_user_token(username, scope, client_id ="eae14429b373461aadc72104110154f9", client_secret = "ada7bc6d1a1d4eada84cf382ae26c4f0", redirect_uri='https://www.roomy-pennapps.space/home/')
   token = True
   if token:
-    # print("Got token for ", username)
+
     sp_auth = SpotifyOAuth(client_id="eae14429b373461aadc72104110154f9",
                                                   client_secret="ada7bc6d1a1d4eada84cf382ae26c4f0",
                                                   redirect_uri=redirect_uri,
-                                                  scope=scope)
+                                                  scope=scope)                                          
     sp = spotipy.Spotify(auth_manager=sp_auth)
+
+    # sp = spotipy.Spotify(auth=token)
+
+
     # url = sp_auth.get_authorize_url()
     # print(url)
 
