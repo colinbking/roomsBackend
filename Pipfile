@@ -20,5 +20,6 @@ gunicorn = "*"
 python-dotenv = "*"
 spotipy = "*"
 requests = "*"
+flask-cors = "*"
 
 [dev-packages]

@@ -29,22 +29,20 @@ def create():
   Create User Function
   """
   req_data = request.get_json()
+  name = req_data.get('username')
+  email = req_data.get('email')
+  new_user = UserModel(id= random.randint(5,10000000), username = name, email=email)
 #   print(req_data)
-  data, error = user_schema.load(req_data)
 
-  if error:
-    return custom_response(error, 400)
   
   # check if user already exist in the db
-  user_in_db = UserModel.get_user_by_email(data.get('email'))
+  user_in_db = UserModel.get_user_by_name(new_user.username)
   if user_in_db:
-    message = {'error': 'User already exist, please supply another email address'}
+    message = {'error': 'User already exist, please supply another username'}
     return custom_response(message, 400)
 
-  user = UserModel(data)
-  user.save()
-  print(data, user)
-  ser_data = user_schema.dump(user)
+  new_user.save()
+  ser_data = user_schema.dump(new_user)
   return(custom_response(ser_data, 200))
 
 @user_api.route('/<string:username>/zoom_login', methods=['POST'])
@@ -107,9 +105,10 @@ def get_new_spotify_playlist(username):
 
   # username = '31a4izbs5mkyksxuhdzetwyoivfm'
   scope = "user-read-recently-played playlist-modify-public user-library-modify playlist-read-collaborative playlist-modify-private"
-  # redirect_uri = "https://www.roomy-pennapps.space/"
-  # redirect_uri = "http://localhost:8080/"
-  redirect_uri = "https://papps2020.uc.r.appspot.com/"
+  redirect_uri = "https://www.roomy-pennapps.space/"
+#   redirect_uri = "http://localhost:8080/"
+
+#   redirect_uri = 'https://papps2020.uc.r.appspot.com:8080'
 
 
   # token = util.prompt_for_user_token(username, scope, redirect_uri='https://www.roomy-pennapps.space/home/')
