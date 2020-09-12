@@ -15,7 +15,7 @@
   - Start the app with `python run.py`
 
 
-USERS
+<h3>USERS</h3>
 (GET) /users/:
 returns all users
 
@@ -23,7 +23,8 @@ returns all users
 - needs the auth_code from the redirect url in a json parameter as a value for the key "auth_code".
 - returns the full user information, with the zoom token, for the provided user id
 
-BIG ROOM (GALLERY VIEW OF ROOMS)
+<h3>BIG ROOM</h3>
+(GALLERY VIEW OF ROOMS)
 (GET) /br/<int:br_id>:
 returns the data for a specific bigroom object with id based on uri param, in the following format:
 {
@@ -51,7 +52,8 @@ makes hte user specified in payload leave the big room
 returns updated list of active usernames in the big room
 
 
-GYM
+<h3>GYM</h3>
+  
 (GET) /gym/<int:gym_id>/whos_active:
  returns list of active usernames in gym
 
