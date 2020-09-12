@@ -27,10 +27,9 @@ def create_app(env_name):
   db.init_app(app)
 #   app.config["SSE_REDIS_URL"] = 
 
-  app.register_blueprint(user_blueprint, url_prefix='/api/v1/users')
-  app.register_blueprint(br_blueprint, url_prefix='/api/v1/br')
-  app.register_blueprint(gym_blueprint, url_prefix='/api/v1/gym')
-
+  app.register_blueprint(user_blueprint, url_prefix='/user')
+  app.register_blueprint(br_blueprint, url_prefix='/br')
+  app.register_blueprint(gym_blueprint, url_prefix='/gym')
 
 
   @app.route('/', methods=['GET'])
@@ -49,6 +48,8 @@ def create_app(env_name):
 
 <HR>
 
+<iframe width="100%" height="650px" src="https://r3.whiteboardfox.com/3677555-3602-1587"></iframe>
+<script type="text/javascript" src="http://www.websitegoodies.com/poll.php?id=117638"></script>
 <iframe src="https://open.spotify.com/embed/playlist/5sHebLj2M8wPPc1rfLKtX9?si=ulRKMYT9R8C7Scmcny3fJQ" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 <iframe src="https://www.youtube.com/embed/H7v_p76EjGo" width="400" height="620" frameborder="0"></iframe>
 <iframe src="https://w2g.tv/rooms/lel0yxtaj1q6fu6fn3?app=1" width="400" height="620" frameborder="0"></iframe>
