@@ -24,18 +24,18 @@ returns all users
 - returns the full user information, with the zoom token, for the provided user id
 
 <h3>BIG ROOM</h3>
-(GALLERY VIEW OF ROOMS)
+(GALLERY VIEW OF ROOMS)  
 (GET) /br/<int:br_id>:
-returns the data for a specific bigroom object with id based on uri param, in the following format:
-{
- id = fields.Int(dump_only=True)
-  name = fields.Str()
-  members = fields.List(fields.Int)
-  active = fields.List(fields.Str)
-  gym_id = fields.Int()
-  cafe_id = fields.Int()
-  kitchen_id = fields.Int()
-}
+returns the data for a specific bigroom object with id based on uri param, in the following format: 
+{  
+ id = fields.Int(dump_only=True)  
+  name = fields.Str()  
+  members = fields.List(fields.Int)  
+  active = fields.List(fields.Str)  
+  gym_id = fields.Int()  
+  cafe_id = fields.Int()  
+  kitchen_id = fields.Int()  
+}  
 
 (GET) /br/<int:br_id>/whos_active:
  returns list of active usernames
