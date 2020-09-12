@@ -74,7 +74,7 @@ import requests
 
 # pp = pprint.PrettyPrinter()
 
-@user_api.route('/callback/<string:authtoken>')
+@user_api.route('/callback/<string:authtoken>', methods=['GET'])
 def extractAuthToken(authtoken):
   # authtoken = authtoken.split("?code=")[0]
   authtoken = "https://papps2020.uc.r.appspot.com/user/callback/" + authtoken
