@@ -54,26 +54,26 @@ returns updated list of active usernames in the big room
 
 <h3>GYM</h3>
   
-(GET) /gym/<int:gym_id>/whos_active:
- returns list of active usernames in gym
+(GET) /gym/<int:gym_id>/whos_active:  
+ returns list of active usernames in gym  
 
-(PUT) /br/<int:gym_id>/joined_gym:
--requires "username" and "id" fields in json payload.
-makes the user specified in the payload join the gym.
-if the first person, starts a zoom meeting, and returns zoom meeting link under "meeting" key in response json.
-returns updated list of active usernames in the big room under "active_members" key in response json.
+(PUT) /br/<int:gym_id>/joined_gym:  
+-requires "username" and "id" fields in json payload.  
+makes the user specified in the payload join the gym.  
+if the first person, starts a zoom meeting, and returns zoom meeting link under "meeting" key in response json.  
+returns updated list of active usernames in the big room under "active_members" key in response json.  
 
-(PUT) /br/<int:gym_id>/left_gym:
--requires "username" and "id" fields in json payload.
-makes the user specified in the payload leave the gym.f
-returns updated list of active usernames in the big room 
+(PUT) /br/<int:gym_id>/left_gym:   
+-requires "username" and "id" fields in json payload.  
+makes the user specified in the payload leave the gym.   
+returns updated list of active usernames in the big room   
 
-(PUT) /br/<int:gym_id>/start_workout:
--sets the current timestamp as the time the workout was started. 
--send a GET to workout start to retrieve this (when a late person joins, will do this)
--returns timestamp in utc of when workout was staretd
+(PUT) /br/<int:gym_id>/start_workout:  
+-sets the current timestamp as the time the workout was started.    
+-send a GET to workout start to retrieve this (when a late person joins, will do this)   
+-returns timestamp in utc of when workout was staretd  
 
-(GET) /br/<int:gym_id>/join_workout:
+(GET) /br/<int:gym_id>/join_workout:  
 returns integer difference of number of seconds you should skip ahead in the video to catch up
 
 
