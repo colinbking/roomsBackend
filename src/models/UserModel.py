@@ -28,14 +28,17 @@ class UserModel(db.Model):
   last_login = db.Column(db.DateTime)
 
   # class constructor
-  def __init__(self, data):
+  def __init__(self, id, username, email):
     """
     Class constructor
     """
-    self.name = data.get('name')
-    self.email = data.get('email')
+    self.username = username
+    self.email = email
+    self.id = id
+    self.user_id = email
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
+    self.online = True
 
   def save(self):
     db.session.add(self)
