@@ -80,18 +80,22 @@ import requests
 # def add_song_to_playlist():
 
 
-@user_api.route('/get_spotify_info', methods=['GET'])
-def get_new_spotify_playlist():
+@user_api.route('/<string:username>/get_spotify_info', methods=['GET'])
+def get_new_spotify_playlist(username):
   """
   
   """
+  user = UserModel.get_user_by_name(username)
 
   # delete .cache
   import os
   APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-  if os.path.isfile('../../.cache'):
-    os.remove(os.path.join(APP_ROOT, '../../.cache'))
-
+  APP_ROOT = APP_ROOT[:-9]
+  if os.path.isfile('.cache'):
+    os.remove(os.path.join(APP_ROOT, '.cache'))
+    print(APP_ROOT)
+    # while True:
+    #   print("Removed!")
   # Start Oauth2
 
   # auth_manager = SpotifyClientCredentials()
@@ -104,7 +108,7 @@ def get_new_spotify_playlist():
   # username = '31a4izbs5mkyksxuhdzetwyoivfm'
   scope = "user-read-recently-played playlist-modify-public user-library-modify playlist-read-collaborative playlist-modify-private"
   # redirect_uri = "https://www.roomy-pennapps.space/"
-#   redirect_uri = "http://localhost:8080/"
+  # redirect_uri = "http://localhost:8080/"
   redirect_uri = "https://papps2020.uc.r.appspot.com/"
 
 
@@ -153,7 +157,11 @@ def get_new_spotify_playlist():
   genres = resp.json()['genres']
   # print(genres)
 
+  user.update({"genres":genres, "artist":artist_id})
 
+
+
+# artist_id, genres
 
 
 
