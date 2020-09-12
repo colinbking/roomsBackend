@@ -1,0 +1,11 @@
+runtime: python
+env: flex
+runtime_config:
+    python_version: 3
+    
+env_variables:
+    FLASK_ENV : "development"
+    SSE_REDIS_URL: ""
+    DATABASE_URL: "postgresql://postgres:testtest@testdb.cy5qtfyccmxt.us-east-2.rds.amazonaws.com:5432/postgres"
+    DATABASE_TEST_URL: "postgresql://postgres:testtest@testdb.cy5qtfyccmxt.us-east-2.rds.amazonaws.com:5432/postgres"
+entrypoint: gunicorn -b :$PORT main:main
