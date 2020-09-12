@@ -20,7 +20,7 @@
 (GET) /users/:
 returns all users
 
-(POST) /users/<int:user_id>/zoom_login:
+(POST) /users/<string:username>/zoom_login:
 - needs the auth_code from the redirect url in a json parameter as a value for the key "auth_code".
 - returns the full user information, with the zoom token, for the provided user id
 
@@ -55,6 +55,9 @@ returns updated list of active usernames in the big room
 
 <h3>GYM</h3>
   
+(GET) /gym/<int:gym_id>:  
+ returns json data for one gym room
+ 
 (GET) /gym/<int:gym_id>/whos_active:  
  returns list of active usernames in gym  
 
@@ -76,6 +79,11 @@ returns updated list of active usernames in the big room
 
 (GET) /br/<int:gym_id>/join_workout:  
 returns integer difference of number of seconds you should skip ahead in the video to catch up
+
+(PUT) /br/<int:gym_id>/set_note:  
+takes value of "note" key in payload and sets it as the "note" field of the room (status thing to query from big room view)
+
+
 
 
 
