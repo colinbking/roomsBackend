@@ -104,7 +104,10 @@ def get_new_spotify_playlist():
   # username = '31a4izbs5mkyksxuhdzetwyoivfm'
   scope = "user-read-recently-played playlist-modify-public user-library-modify playlist-read-collaborative playlist-modify-private"
   # redirect_uri = "https://www.roomy-pennapps.space/"
-  redirect_uri = "https://testflask-289216.uc.r.appspot.com/"
+#   redirect_uri = "http://localhost:8080/"
+  redirect_uri = "https://papps2020.uc.r.appspot.com/"
+
+
   # token = util.prompt_for_user_token(username, scope, redirect_uri='https://www.roomy-pennapps.space/home/')
   token = True
   if token:
