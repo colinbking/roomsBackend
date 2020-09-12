@@ -4,8 +4,10 @@ from flask import request, json, Response, Blueprint, g
 from ..models.UserModel import UserModel, UserSchema
 from ..models.BigRoomModel import BigRoomModel, BigRoomSchema
 from ..models.GymModel import GymModel, GymSchema
-
 from ..shared.Authentication import Auth
+import datetime
+import requests
+import json
 
 gym_api = Blueprint('gym_api', __name__)
 user_schema = UserSchema()
@@ -30,7 +32,7 @@ def get_a_gym(gym_id):
   """
   gym = GymModel.get_one_gym(gym_id)
   if not gym:
-    return custom_response({'error': 'user not found'}, 404)
+    return custom_response({'error': 'gym not found'}, 404)
   
   gymr = gym_schema.dump(gym)
   return custom_response(gymr, 200)
@@ -48,94 +50,73 @@ def add_a_user(gym_id):
   g = GymModel.get_one_gym(gym_id)
   new_mems = list(g.activemembers)
   if user_id not in new_mems: new_mems.append(user_id)
-  g.update({"activemembers": new_mems})
+  g.update({"active": new_mems})
   newg = gym_schema.dump(g)
-
   return custom_response(newg, 200)
-
-# @gym_api.route('/', methods=['POST'])
-# def create():
-#   """
-#   Create User Function
-#   """
-#   req_data = request.get_json()
-#   data, error = user_schema.load(req_data)
-
-#   if error:
-#     return custom_response(error, 400)
   
-#   # check if user already exist in the db
-#   user_in_db = UserModel.get_user_by_email(data.get('email'))
-#   if user_in_db:
-#     message = {'error': 'User already exist, please supply another email address'}
-#     return custom_response(message, 400)
-  
-#   user = UserModel(data)
-#   user.save()
-#   ser_data = user_schema.dump(user).data
-#   token = Auth.generate_token(ser_data.get('id'))
-#   return custom_response({'jwt_token': token}, 201)
+@gym_api.route('/<int:g_id>', methods=['GET'])
+def get_one(g_id):
+  """
+  Get specific br data
+  """
+  br = GymModel.get_one_gym(g_id)
+  rm = gym_schema.dump(br)
+  return custom_response(rm, 200)
+
+# for tim to poll to see whos active
+@gym_api.route('/<int:g_id>/whos_active', methods=['GET'])
+def get_br_members(g_id):
+    return custom_response(GymModel.get_one_gym(g_id).active, 200)
+
+# lets a person join the big room and updates db
+@gym_api.route('/<int:br_id>/joined_gym', methods=['PUT'])
+def joining_member(br_id):
+    new = request.get_json()['username']
+    br = GymModel.get_one_gym(br_id)
+    new_mems = list(br.active)
+    # if empty, start a meeting
+    if not new_mems:
+        start_zoom_meeting(request.get_json()['id'])
+    if new not in new_mems:
+        new_mems.append(new)
+    br.update({"active" : new_mems})
+    return custom_response(new_mems, 200)
+
+# for tim to signal when someone leaves, and updates db
+@gym_api.route('/<int:br_id>/left_gym', methods=['PUT'])
+def signal_leaving_member(br_id):
+    leaving = request.get_json()['username']
+    br = GymModel.get_one_gym(br_id)
+    new_mems = [mem for mem in br.active if mem != leaving]
+    br.update({"active" : new_mems})
+    return custom_response(new_mems, 200)
 
 
-# @gym_api.route('/me', methods=['PUT'])
-# # @Auth.auth_required
-# def update():
-#   """ppython
-#   Update me
-#   """
-#   req_data = request.get_json()
-#   data, error = user_schema.load(req_data, partial=True)
-#   if error:
-#     return custom_response(error, 400)
-
-#   user = UserModel.get_one_user(g.user.get('id'))
-#   user.update(data)
-#   ser_user = user_schema.dump(user).data
-#   return custom_response(ser_user, 200)
-
-# @gym_api.route('/me', methods=['DELETE'])
-# # @Auth.auth_required
-# def delete():
-#   """
-#   Delete a user
-#   """
-#   user = UserModel.get_one_user(g.user.get('id'))
-#   user.delete()
-#   return custom_response({'message': 'deleted'}, 204)
-
-# @gym_api.route('/me', methods=['GET'])
-# # @Auth.auth_required
-# def get_me():
-#   """
-#   Get me
-#   """
-#   user = UserModel.get_one_user(g.user.get('id'))
-#   ser_user = user_schema.dump(user).data
-#   return custom_response(ser_user, 200)
+def start_zoom_meeting(id):
+    usr = UserModel.get_one_user(id)
+    token = usr.zoom_token
+    body = {"topic": "workout",
+    "start_time": str(datetime.datetime.utcnow()),
+    "duration": 30,
+    "timezone": "America/Los_Angeles",
+    "agenda": "Working Out",
+    "settings": {
+        "host_video": "true",
+        "participant_video": "true",
+        "join_before_host": "true"
+    }
+    }
+    print("here\n",token)
+    print(json.dumps(body))
+    resp = requests.post('https://api.zoom.us/v2/users/'+usr.user_id+'/meetings', json = body, headers = {"Content-Type":"application/json","Authorization" : "Bearer "+ token, "Connection":"keep-alive"})
+    print("post stuff", resp.content)
+    print(resp.json())
+    return custom_response(resp.json(), 200)
+    
 
 
-# @gym_api.route('/login', methods=['POST'])
-# def login():
-#   """
-#   User Login Function
-#   """
-#   req_data = request.get_json()
 
-#   data, error = user_schema.load(req_data, partial=True)
-#   if error:
-#     return custom_response(error, 400)
-#   if not data.get('email') or not data.get('password'):
-#     return custom_response({'error': 'you need email and password to sign in'}, 400)
-#   user = UserModel.get_user_by_email(data.get('email'))
-#   if not user:
-#     return custom_response({'error': 'invalid credentials'}, 400)
-#   if not user.check_hash(data.get('password')):
-#     return custom_response({'error': 'invalid credentials'}, 400)
-#   ser_data = user_schema.dump(user).data
-#   token = Auth.generate_token(ser_data.get('id'))
-#   return custom_response({'jwt_token': token}, 200)
 
-  
 
 def custom_response(res, status_code):
   """

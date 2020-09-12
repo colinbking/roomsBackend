@@ -16,9 +16,12 @@ class BigRoomModel(db.Model):
 
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(128), nullable=False)
-  members = db.Column(ARRAY(db.String(128)), nullable=False)
-  gymid = db.Column(db.Integer)
-  
+  members = db.Column(ARRAY(db.Integer), nullable=False)
+  active = db.Column(ARRAY(db.String(128)), nullable=False)
+  gym_id = db.Column(db.Integer)
+  cafe_id = db.Column(db.Integer)
+  kitchen_id = db.Column(db.Integer)
+
 
   # class constructor
   def __init__(self, data):
@@ -27,7 +30,10 @@ class BigRoomModel(db.Model):
     """
     self.name = data.get('name')
     self.members = data.get('members')
-    self.gymid = data.get('gymid')
+    self.gym_id = data.get('gym_id')
+    self.kitchen_id = data.get('kitchen_id')
+    self.cafe_id = data.get('cafe_id')
+
 
   def save(self):
     db.session.add(self)
@@ -62,7 +68,10 @@ class BigRoomSchema(Schema):
   id = fields.Int(dump_only=True)
   name = fields.Str(required=True)
   members = fields.List(fields.Int)
-  gymid = fields.Int()
+  active = fields.List(fields.Str)
+  gym_id = fields.Int()
+  cafe_id = fields.Int()
+  kitchen_id = fields.Int()
 
 #   blogposts = fields.Nested(BlogpostSchema, many=True)
 

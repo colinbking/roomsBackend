@@ -31,9 +31,9 @@ def store_zoom_token(user_id):
   to_update = user_schema.dump(user)
   auth_code = request.get_json()['auth_code']
   hdrs = {"Authorization": "Basic " + os.getenv('ENCODED_ID_SECRET')}
-  resp = requests.post('https://zoom.us/oauth/token?grant_type=authorization_code&code='+auth_code+'&redirect_uri=https://testflask-289216.uc.r.appspot.com/', headers=hdrs)
+  resp = requests.post('https://zoom.us/oauth/token?grant_type=authorization_code&code='+auth_code+'&redirect_uri=https://www.roomy-pennapps.space/home', headers=hdrs)
   b_token = resp.json().get("access_token")
-  print(resp, b_token)
+  print(resp.content, b_token)
   user.update({"zoom_token": b_token})
   new_u = user_schema.dump(user)
   return custom_response(new_u, 200)

@@ -15,11 +15,12 @@ class UserModel(db.Model):
 
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(128), nullable=False)
+  user_id = db.Column(db.String(128), nullable=False)
   email = db.Column(db.String(128), unique=True, nullable=False)
   artists = db.Column(ARRAY(db.String(128)), nullable=False)
   genres = db.Column(ARRAY(db.String(128)), nullable=False)
   songs = db.Column(ARRAY(db.String(128)), nullable=False)
-  zoom_token = db.Column(db.String(128))
+  zoom_token = db.Column(db.String(256))
   created_at = db.Column(db.DateTime)
   status = db.Column(db.String(128))
   online = db.Column(db.Boolean(128))
@@ -75,6 +76,7 @@ class UserModel(db.Model):
 
 class UserSchema(Schema):
   id = fields.Int(dump_only=True)
+  user_id = fields.Str(required= True)
   username = fields.Str(required=True)
   email = fields.Email(required=True)
   artists = fields.List(fields.Str)
