@@ -10,7 +10,7 @@ from .models import db, bcrypt
 from .views.UserView import user_api as user_blueprint
 from .views.BigRoomView import br_api as br_blueprint
 from .views.GymView import gym_api as gym_blueprint
-
+from .views.CafeView import cafe_api as cafe_blueprint
 
 
 def create_app(env_name):
@@ -31,6 +31,8 @@ def create_app(env_name):
   app.register_blueprint(user_blueprint, url_prefix='/user')
   app.register_blueprint(br_blueprint, url_prefix='/br')
   app.register_blueprint(gym_blueprint, url_prefix='/gym')
+  app.register_blueprint(cafe_blueprint, url_prefix='/cafe')
+
 
 
   @app.route('/', methods=['GET'])
