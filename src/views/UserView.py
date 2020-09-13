@@ -212,7 +212,8 @@ def get_new_spotify_playlist(username):
   sp = spotipy.Spotify(auth_manager=sp_auth)
 
 
-  playlist_id = '5sHebLj2M8wPPc1rfLKtX9'
+  gym_playlist_id = '5sHebLj2M8wPPc1rfLKtX9'
+  cafe_playlist_id = '2P8cx6O6JIu0sT2ItymYNI'
   # "https://open.spotify.com/embed/playlist/5sHebLj2M8wPPc1rfLKtX9?si=ulRKMYT9R8C7Scmcny3fJQ"
 
 
