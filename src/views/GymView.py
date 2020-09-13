@@ -22,7 +22,6 @@ def get_all():
   """
   gym = GymModel.get_all_gyms()
   gyms = gym_schema.dump(gym, many=True)
-  print(gyms)
   return custom_response(gyms, 200)
 
 @gym_api.route('/<int:gym_id>', methods=['GET'])
@@ -78,10 +77,9 @@ def joining_member(gym_id):
     new_meeting = gym.zoom_mtg
     if not new_mems or not new_meeting:
         new_meeting = start_zoom_meeting(request.get_json()['id'])["join_url"]
-        
+        gym.update({"active" : new_mems, "zoom_mtg": new_meeting})
     if new not in new_mems:
         new_mems.append(new)
-    gym.update({"active" : new_mems, "zoom_mtg": new_meeting})
     return custom_response({"active_members" : new_mems, "meeting" : new_meeting}, 200)
 
 # for tim to signal when someone leaves, and updates db
@@ -91,7 +89,11 @@ def signal_leaving_member(gym_id):
     g = GymModel.get_one_gym(gym_id)
     new_mems = [mem for mem in g.active if mem != leaving]
     g.update({"active" : new_mems})
+    # clean up youtube and zom meeting if last person
+    if not new_mems or not g.active:
+        g.update({"video_started":None, "zoom_mtg":None})
     return custom_response(new_mems, 200)
+
 
 # for tim to signal when someone starts workout
 @gym_api.route('/<int:gym_id>/set_note', methods=['POST'])
@@ -102,38 +104,43 @@ def set_note(gym_id):
     return custom_response(note, 200)
 
 # for tim to signal when someone starts workout
-@gym_api.route('/<int:gym_id>/start_workout', methods=['GET'])
+@gym_api.route('/<int:gym_id>/workout', methods=['GET'])
 def start_workout(gym_id):
     start_t = datetime.datetime.utcnow()
     g = GymModel.get_one_gym(gym_id)
-    g.update({"video_started" : start_t})
-    return custom_response(str(start_t), 200)
-
-# for tim to signal when someone starts workout
-@gym_api.route('/<int:gym_id>/join_workout', methods=['GET'])
-def join_workout(gym_id):
-    g = GymModel.get_one_gym(gym_id)
+    # store timestamp in db
     started = g.video_started
-    diff = (datetime.datetime.utcnow() - started).total_seconds()
-    print(diff)
-    return custom_response(int(diff), 200)
+    if not started:
+        g.update({"video_started" : start_t})
+        return custom_response({"time" : 0}, 200)
+    else:
+        diff = (datetime.datetime.utcnow() - started).total_seconds()
+        return custom_response({'time': int(diff)}, 200)
+
+
+# # for tim to signal when someone starts workout
+# @gym_api.route('/<int:gym_id>/join_workout', methods=['GET'])
+# def join_workout(gym_id):
+#     g = GymModel.get_one_gym(gym_id)
+#     started = g.video_started
+#     diff = (datetime.datetime.utcnow() - started).total_seconds()
+#     return custom_response({'time': int(diff)}, 200)
 
 def start_zoom_meeting(id):
     usr = UserModel.get_one_user(id)
     token = usr.zoom_token
-    body = {"topic": "workout",
+    body = {"topic": "Chilling",
     "start_time": str(datetime.datetime.utcnow()),
     "duration": 30,
     "timezone": "America/Los_Angeles",
-    "agenda": "Working Out",
+    "agenda": "Chilling, coffee",
     "settings": {
         "host_video": "true",
         "participant_video": "true",
         "join_before_host": "true"
     }
     }
-    print("here\n",token)
-    print(json.dumps(body))
+
     resp = requests.post('https://api.zoom.us/v2/users/'+usr.email+'/meetings', json = body, headers = {"Content-Type":"application/json","Authorization" : "Bearer "+ token, "Connection":"keep-alive"})
     return resp.json()
     

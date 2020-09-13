@@ -217,7 +217,7 @@ def get_new_spotify_playlist(username):
   # "https://open.spotify.com/embed/playlist/5sHebLj2M8wPPc1rfLKtX9?si=ulRKMYT9R8C7Scmcny3fJQ"
 
 
-  sp.playlist_add_items(playlist_id, [uri])
+  sp.playlist_add_items(gym_playlist_id, [uri])
 
 
 
