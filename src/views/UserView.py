@@ -94,13 +94,13 @@ def get_new_spotify_playlist(username):
   """
   user = UserModel.get_user_by_name(username)
 
-  # # delete .cache
-  # import os
-  # APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-  # APP_ROOT = APP_ROOT[:-9]
-  # if os.path.isfile('.cache'):
-  #   os.remove(os.path.join(APP_ROOT, '.cache'))
-  #   print(APP_ROOT)
+  # delete .cache
+  import os
+  APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+  APP_ROOT = APP_ROOT[:-9]
+  if os.path.isfile('.cache'):
+    os.remove(os.path.join(APP_ROOT, '.cache'))
+    # print(APP_ROOT)
 
 
 
@@ -116,8 +116,8 @@ def get_new_spotify_playlist(username):
 
   # username = '31a4izbs5mkyksxuhdzetwyoivfm'
   scope = "user-read-recently-played playlist-modify-public user-library-modify playlist-read-collaborative playlist-modify-private"
-  redirect_uri = "https://www.roomy-pennapps.space/home/"
-  # redirect_uri = "http://localhost:8080/"
+  # redirect_uri = "https://www.roomy-pennapps.space/home/"
+  redirect_uri = "http://localhost:8080/"
   # redirect_uri = "https://papps2020.uc.r.appspot.com/user/callback/"
   # redirect_uri = "http://example.com/callback/"
 
@@ -217,7 +217,7 @@ def get_new_spotify_playlist(username):
   # "https://open.spotify.com/embed/playlist/5sHebLj2M8wPPc1rfLKtX9?si=ulRKMYT9R8C7Scmcny3fJQ"
 
 
-  sp.playlist_add_items(playlist_id, [uri])
+  sp.playlist_add_items(gym_playlist_id, [uri])
 
 
 
