@@ -19,7 +19,7 @@ def get_all():
   """
   users = UserModel.get_all_users()
   ser_users = user_schema.dump(users, many=True)
-  print(ser_users)
+  # print(ser_users)
   return custom_response(ser_users, 200)
 
 
@@ -74,18 +74,18 @@ import requests
 
 # pp = pprint.PrettyPrinter()
 
-@user_api.route('/callback/<string:authtoken>', methods=['GET'])
-def extractAuthToken(authtoken):
-  # authtoken = authtoken.split("?code=")[0]
-  authtoken = "https://papps2020.uc.r.appspot.com/user/callback/" + authtoken
+# @user_api.route('/callback/<string:authtoken>', methods=['GET'])
+# def extractAuthToken(authtoken):
+#   # authtoken = authtoken.split("?code=")[0]
+#   authtoken = "https://papps2020.uc.r.appspot.com/user/callback/" + authtoken
 
-  print(authtoken)
-  import sys
-  from io import StringIO
+#   print("authtoken is = ", authtoken)
+#   import sys
+#   from io import StringIO
 
-  sys.stdin = StringIO(authtoken)
+#   sys.stdin = StringIO(authtoken)
 
-  return custom_response({"result":"success"}, 200)
+#   return custom_response({"result":"success"}, 200)
 
 @user_api.route('/<string:username>/get_spotify_info', methods=['GET'])
 def get_new_spotify_playlist(username):
@@ -94,15 +94,17 @@ def get_new_spotify_playlist(username):
   """
   user = UserModel.get_user_by_name(username)
 
-  # delete .cache
-  import os
-  APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-  APP_ROOT = APP_ROOT[:-9]
-  if os.path.isfile('.cache'):
-    os.remove(os.path.join(APP_ROOT, '.cache'))
-    print(APP_ROOT)
-    # while True:
-    #   print("Removed!")
+  # # delete .cache
+  # import os
+  # APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+  # APP_ROOT = APP_ROOT[:-9]
+  # if os.path.isfile('.cache'):
+  #   os.remove(os.path.join(APP_ROOT, '.cache'))
+  #   print(APP_ROOT)
+
+
+
+
   # Start Oauth2
 
   # auth_manager = SpotifyClientCredentials()
@@ -114,9 +116,9 @@ def get_new_spotify_playlist(username):
 
   # username = '31a4izbs5mkyksxuhdzetwyoivfm'
   scope = "user-read-recently-played playlist-modify-public user-library-modify playlist-read-collaborative playlist-modify-private"
-  # redirect_uri = "https://www.roomy-pennapps.space/home/"
+  redirect_uri = "https://www.roomy-pennapps.space/home/"
   # redirect_uri = "http://localhost:8080/"
-  redirect_uri = "https://papps2020.uc.r.appspot.com/user/callback/"
+  # redirect_uri = "https://papps2020.uc.r.appspot.com/user/callback/"
   # redirect_uri = "http://example.com/callback/"
 
   # username = 'shjang956'
@@ -153,7 +155,7 @@ def get_new_spotify_playlist(username):
       artist_id = track['artists'][0]['id']
       artist_name = track['artists'][0]['name']
       # pp.pprint(track)
-      print(artist_name, artist_id)
+      # print(artist_name, artist_id)
       break
 
 
@@ -193,7 +195,7 @@ def get_new_spotify_playlist(username):
 
 
   uri = resp.json()['tracks'][0]['uri']
-  print(resp.json()['tracks'][0]['name'], resp.json()['tracks'][0]['artists'][0]['name'])
+  # print(resp.json()['tracks'][0]['name'], resp.json()['tracks'][0]['artists'][0]['name'])
 
 
 
