@@ -23,27 +23,21 @@ def get_all():
   return custom_response(ser_users, 200)
 
 
-@user_api.route('/signup', methods=['POST'])
-def create():
+@user_api.route('/login', methods=['POST'])
+def create_or_login():
   """
   Create User Function
   """
   req_data = request.get_json()
   name = req_data.get('username')
   email = req_data.get('email')
-  new_user = UserModel(id= random.randint(5,10000000), username = name, email=email)
-#   print(req_data)
-
-  
-  # check if user already exist in the db
-  user_in_db = UserModel.get_user_by_name(new_user.username)
+  user_in_db = UserModel.get_user_by_name(name)
   if user_in_db:
-    message = {'error': 'User already exist, please supply another username'}
-    return custom_response(message, 400)
-
-  new_user.save()
-  ser_data = user_schema.dump(new_user)
-  return(custom_response(ser_data, 200))
+    message = {'Exists': 'User already exist, logging in now as ' + name}
+    return custom_response(user_schema.dump(user_in_db), 200)
+  else:
+    new_user = UserModel(id= random.randint(5,10000000), username = name, email=email)
+    return custom_response(user_schema.dump(new_user), 200)
 
 @user_api.route('/<string:username>/zoom_login', methods=['POST'])
 def store_zoom_token(username):
