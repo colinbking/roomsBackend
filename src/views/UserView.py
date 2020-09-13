@@ -180,7 +180,7 @@ def get_new_spotify_playlist(username):
 def add_gym_playlist(username):
   user = UserModel.get_user_by_name(username)
 
-  artist_id = user.artist_id
+  artist_id = user.artist
   genres = user.genres
 
 
@@ -265,7 +265,7 @@ def add_gym_playlist(username):
 def add_cafe_playlist(username):
   user = UserModel.get_user_by_name(username)
 
-  artist_id = user.artist_id
+  artist_id = user.artist
   genres = user.genres
 
 
