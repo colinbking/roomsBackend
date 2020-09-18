@@ -1,5 +1,8 @@
+# BACKEND REPOSITORY FOR http://roomy-pennapps.space/
+Part of a top 10 project for PennApps XXI: https://devpost.com/software/roomy
+
 # Roomy Backend API
-<h3>DEPLOYED AT https://papps2020.uc.r.appspot.com/ </h3>
+backend deployment: https://papps2020.uc.r.appspot.com/ 
 
 ## Installation
   - Install [Python](https://www.python.org/downloads/), [Pipenv](https://docs.pipenv.org/) and [Postgres](https://www.postgresql.org/) on your machine
@@ -8,12 +11,7 @@
   - Activate the project virtual environment with `$ pipenv shell` command
   - Install all required dependencies with `$ pipenv install`
   - Export the required environment variables
-      ```
-      $ export FLASK_ENV=development
-      $ export DATABASE_URL=postgres://name:password@houst:port/blog_api_db
-      $ export JWT_SECRET_KEY=hhgaghhgsdhdhdd
-      ```
-  - Start the app with `python run.py`
+  - Start the app with `python main.py`
 
 
 <h3>USERS</h3>
